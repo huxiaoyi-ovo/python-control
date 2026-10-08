@@ -369,6 +369,15 @@ def test_list_responses(resp_fcn):
             assert cplt.lines[row, col][0].get_color() == 'tab:blue'
             assert cplt.lines[row, col][1].get_color() == 'tab:orange'
 
+    # A plain list should use the same multi-response plotting path
+    plt.figure()
+    cplt = ct.time_response_plot([resp1, resp2])
+    assert cplt.lines.shape == shape
+    for row in range(2):        # just look at the outputs
+        for col in range(shape[1]):
+            assert cplt.lines[row, col][0].get_color() == 'tab:blue'
+            assert cplt.lines[row, col][1].get_color() == 'tab:orange'
+
 
 @pytest.mark.slycot
 @pytest.mark.usefixtures('mplcleanup')

@@ -46,14 +46,15 @@ def time_response_plot(
     """Plot the time response of an input/output system.
 
     This function creates a standard set of plots for the input/output
-    response of a system, with the data provided via a `TimeResponseData`
-    object, which is the standard output for python-control simulation
-    functions.
+    response of a system, with the data provided via one or more
+    `TimeResponseData` objects, which are the standard output for
+    python-control simulation functions.
 
     Parameters
     ----------
-    data : `TimeResponseData`
-        Data to be plotted.
+    data : `TimeResponseData` or list of `TimeResponseData`
+        Data to be plotted. If a list is provided, responses are plotted on
+        the same axes.
     plot_inputs : bool or str, optional
         Sets how and where to plot the inputs:
             * False: don't plot the inputs
@@ -175,6 +176,18 @@ def time_response_plot(
 
     """
     from .ctrlplot import _process_ax_keyword, _process_line_labels
+
+    # Plot lists of responses using the existing TimeResponseList path.
+    if isinstance(data, list):
+        from .timeresp import TimeResponseList
+
+        if label is not None:
+            kwargs['label'] = label
+        return TimeResponseList(data).plot(
+            *fmt, ax=ax, plot_inputs=plot_inputs, plot_outputs=plot_outputs,
+            transpose=transpose, overlay_traces=overlay_traces,
+            overlay_signals=overlay_signals, add_initial_zero=add_initial_zero,
+            trace_labels=trace_labels, title=title, relabel=relabel, **kwargs)
 
     #
     # Process keywords and set defaults
